@@ -1,5 +1,5 @@
 import React,{ Component} from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, Text, View} from 'react-native'
 
 export default class App extends Component {
     render() {
@@ -10,8 +10,23 @@ export default class App extends Component {
                         <Image style={styles.cardImage}
                             source={require('../../assets/images/user.png')}/>
                     </View>
+                    <View> <Text style={styles.cardName}>
+                        John Doe
+                    </Text>
                 </View>
+                <View style={styles.cardOccupationContainer}>
+                    <Text style={styles.cardOccupation}>
+                        React Native Developer 
+                    </Text>
+                </View>
+                <View>
+                <Text style={styles.cardDescription}>
+                John is a really great Javascript developer. He loves using JS to build React Native applications for iOS and Android.
+                </Text>
             </View>
+            </View>
+            </View>
+
         );
     }
 }
@@ -20,7 +35,7 @@ const profileCardColor = 'dodgerblue';
 
 const styles= StyleSheet.create({
     container: {
-        flex:1,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -48,5 +63,30 @@ const styles= StyleSheet.create({
     cardImage: {
         width: 80,
         height: 80
+    },
+    cardOccupationContainer: {
+        borderColor: 'black',
+        borderBottomWidth: 2,
+        width: 'auto',
+        alignItems: 'center'
+    },
+    cardOccupation: {
+        marginTop: 5,
+        marginBottom: 2,
+        fontSize: 15,
+        fontWeight: "bold"
+    },
+    cardDescription: {
+        marginTop:10,
+        marginRight: 20,
+        marginLeft: 30,
+        marginBottom: 10
+    },
+    cardName: {
+    fontSize: 16,
+    color: 'white',
+    fontWeight: 'bold',
+    marginTop: 20, 
+    textAlign: 'center',
     }
 });
