@@ -1,97 +1,68 @@
-import React, { Component } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LogBox } from 'react-native';
-
-LogBox.ignoreLogs([
-  'Non-serializable values were found in the navigation state',
-]);
-
+import { NavigationContainer } from '@react-navigation/native';
 import Cities from './src/Cities/Cities';
 import City from './src/Cities/City';
 import AddCity from './src/AddCity/AddCity';
-import { colors } from './src/theme';
+import Countries from './src/Countries/Countries';
+import AddCountry from './src/AddCountry/AddCountry';
+import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
-function CitiesStackScreen({ navigation, route, cities, addCity, addLocation }) {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: colors.primary,
-        },
-        headerTintColor: '#fff',
-      }}
-    >
-      <Stack.Screen
-        name="Cities"
-        children={(props) => (
-          <Cities {...props} cities={cities} addCity={addCity} addLocation={addLocation} />
-        )}
-      />
-      <Stack.Screen
-        name="City"
-        children={(props) => (
-          <City {...props} cities={cities} addCity={addCity} addLocation={addLocation} />
-        )}
-      />
-    </Stack.Navigator>
-  );
-}
-
-export default class App extends Component {
+export default class App extends React.Component {
   state = {
     cities: [],
+    countries: [],
   };
 
   addCity = (city) => {
-    this.setState((prevState) => ({
-      cities: [...prevState.cities, { ...city, locations: [] }],
-    }));
+    this.setState((prevState) => ({ cities: [...prevState.cities, city] }));
   };
 
   addLocation = (location, city) => {
-    const index = this.state.cities.findIndex((item) => item.id === city.id);
-    const updatedCity = { ...this.state.cities[index], locations: [...this.state.cities[index].locations, location] };
+    this.setState((prevState) => ({
+      cities: prevState.cities.map((c) =>
+        c.id === city.id ? { ...c, locations: [...c.locations, location] } : c
+      ),
+    }));
+  };
 
-    const cities = [
-      ...this.state.cities.slice(0, index),
-      updatedCity,
-      ...this.state.cities.slice(index + 1),
-    ];
-
-    this.setState({ cities });
+  addCountry = (country) => {
+    this.setState((prevState) => ({ countries: [...prevState.countries, country] }));
   };
 
   render() {
     return (
       <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen
-            name="CitiesNav"
-            children={(props) => (
-              <CitiesStackScreen
-                {...props}
-                cities={this.state.cities}
-                addCity={this.addCity}
-                addLocation={this.addLocation}
-              />
-            )}
-          />
-          <Tab.Screen
-            name="AddCity"
-            children={(props) => (
-              <AddCity
-                {...props}
-                cities={this.state.cities}
-                addCity={this.addCity}
-                addLocation={this.addLocation}
-              />
-            )}
-          />
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarIcon: ({ color, size }) => {
+              let iconName;
+              if (route.name === 'Cities') iconName = 'home-outline';
+              else if (route.name === 'AddCity') iconName = 'add-circle-outline';
+              else if (route.name === 'Countries') iconName = 'globe-outline';
+              else if (route.name === 'AddCountry') iconName = 'add-outline';
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+          })}
+        >
+          <Tab.Screen name="Cities">
+            {(props) => <Cities {...props} cities={this.state.cities} addLocation={this.addLocation} />}
+          </Tab.Screen>
+
+          <Tab.Screen name="AddCity">
+            {(props) => <AddCity {...props} addCity={this.addCity} />}
+          </Tab.Screen>
+
+          <Tab.Screen name="Countries">
+            {(props) => <Countries {...props} countries={this.state.countries} />}
+          </Tab.Screen>
+
+          <Tab.Screen name="AddCountry">
+            {(props) => <AddCountry {...props} addCountry={this.addCountry} />}
+          </Tab.Screen>
         </Tab.Navigator>
       </NavigationContainer>
     );
