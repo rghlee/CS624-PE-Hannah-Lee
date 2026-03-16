@@ -1,12 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+
+// Screens
 import Cities from './src/Cities/Cities';
-import City from './src/Cities/City';
 import AddCity from './src/AddCity/AddCity';
+import City from './src/Cities/City';
 import Countries from './src/Countries/Countries';
 import AddCountry from './src/AddCountry/AddCountry';
-import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +51,13 @@ export default class App extends React.Component {
           })}
         >
           <Tab.Screen name="Cities">
-            {(props) => <Cities {...props} cities={this.state.cities} addLocation={this.addLocation} />}
+            {(props) => (
+              <Cities
+                {...props}
+                cities={this.state.cities}
+                addLocation={this.addLocation}
+              />
+            )}
           </Tab.Screen>
 
           <Tab.Screen name="AddCity">
